@@ -1,5 +1,6 @@
 ﻿using GenericBackoffice.infrastructure;
 using GenericBackoffice.models;
+using System;
 using System.Linq;
 using System.Web.Http;
 using System.Web.OData;
@@ -10,33 +11,36 @@ namespace GenericBackoffice.controllers
     {
         public IQueryable<GenericItem> Get()
         {
-            return DataProvider.GetItems(GetCollection()).AsQueryable();
+            var path = GetCollection();
+            return DataProvider.GetItems(path.Item1, path.Item2).AsQueryable();
         }
 
         public GenericItem Get([FromODataUri]string key)
         {
-            return DataProvider.GetItem(GetCollection(), key);
+            var path = GetCollection();
+            return DataProvider.GetItem(path.Item1, path.Item2, key);
         }
 
         public IHttpActionResult Post(GenericItem item)
         {
-            var collection = GetCollection();
+            var path = GetCollection();
 
-            var result = DataProvider.SaveItem(collection, item);
+            var result = DataProvider.SaveItem(path.Item1, path.Item2, item);
             if (result)
-                return Created($"data/{collection}('{item.id}')", item);
+                return Created($"data/{path.Item1}/{path.Item2}('{item.id}')", item);
             return InternalServerError(result.Error);
         }
 
         public IHttpActionResult Delete([FromODataUri]string key)
         {
-            var result = DataProvider.DeleteItem(GetCollection(), key);
+            var path = GetCollection();
+            var result = DataProvider.DeleteItem(path.Item1, path.Item2, key);
             if (result)
                 return Ok();
             return InternalServerError(result.Error);
         }
 
-        private string GetCollection()
+        private Tuple<string, string> GetCollection()
         {
             return DynamicPathHandler.GetCollection((string)RequestContext.RouteData.Values["odataPath"]);
         }

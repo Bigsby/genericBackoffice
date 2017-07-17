@@ -10,9 +10,9 @@ namespace GenericBackoffice.infrastructure
 {
     internal static class DataProvider
     {
-        public static IEnumerable<GenericItem> GetItems(string collection)
+        public static IEnumerable<GenericItem> GetItems(string database, string collection)
         {
-            var folderPath = HostingEnvironment.MapPath($"~/App_Data/{collection}");
+            var folderPath = HostingEnvironment.MapPath($"~/App_Data/{database}/{collection}");
             if (!Directory.Exists(folderPath))
                 yield break;
 
@@ -20,21 +20,21 @@ namespace GenericBackoffice.infrastructure
                 yield return ReadItem(filePath, Path.GetFileNameWithoutExtension(filePath));
         }
 
-        public static GenericItem GetItem(string collection, string id)
+        public static GenericItem GetItem(string database, string collection, string id)
         {
-            var filePath = HostingEnvironment.MapPath($"~/App_Data/{collection}/{id}.json");
+            var filePath = HostingEnvironment.MapPath($"~/App_Data/{database}/{collection}/{id}.json");
             if (!File.Exists(filePath))
                 return null;
 
             return ReadItem(filePath, id);
         }
 
-        public static DataResult SaveItem(string collection, GenericItem item)
+        public static DataResult SaveItem(string database, string collection, GenericItem item)
         {
             try
             {
                 var json = JsonConvert.SerializeObject(item.DynamicProperties);
-                var filePath = HostingEnvironment.MapPath($"~/App_Data/{collection}/{item.id}.json");
+                var filePath = HostingEnvironment.MapPath($"~/App_Data/{database}/{collection}/{item.id}.json");
 
                 if (File.Exists(filePath))
                     File.Delete(filePath);
@@ -48,11 +48,11 @@ namespace GenericBackoffice.infrastructure
             }
         }
 
-        public static DataResult DeleteItem(string collection, string id)
+        public static DataResult DeleteItem(string database, string collection, string id)
         {
             try
             {
-                var filePath = HostingEnvironment.MapPath($"~/App_Data/{collection}/{id}.json");
+                var filePath = HostingEnvironment.MapPath($"~/App_Data/{database}/{collection}/{id}.json");
                 File.Delete(filePath);
                 return DataResult.Successul;
             }

@@ -113,8 +113,10 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Compile Include="controllers\DataController.cs" />
-    <Content Include="App_Data\collection\one.json" />
-    <Content Include="App_Data\collection\two.json" />
+    <Content Include="App_Data\data\collection\one.json" />
+    <Content Include="App_Data\data\collection\two.json" />
+    <Content Include="App_Data\admin\users\one.json" />
+    <Content Include="App_Data\admin\users\two.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
