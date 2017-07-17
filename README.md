@@ -313,4 +313,4 @@ This is a *natural* consequence of the [Generic OData Web API Controller](https:
         1. Browse to [http://localhost:PORT/data/collection](http://localhost:60371/data/collection)
         2. Browse to [http://localhost:PORT/data/admin/users](http://localhost:60371/data/admin/users)
 
-2. Add backoffice application - Next
+2. Add Authentication - WIP
