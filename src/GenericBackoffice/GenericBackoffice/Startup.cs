@@ -1,13 +1,15 @@
-﻿using Microsoft.Owin;
+﻿using GenericBackoffice.infrastructure;
+using GenericBackoffice.models;
+using Microsoft.OData.Edm;
+using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
 using Owin;
+using System;
+using System.Linq;
 using System.Web.Http;
+using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
 using System.Web.OData.Routing.Conventions;
-using System.Linq;
-using Microsoft.OData.Edm;
-using System.Web.OData.Builder;
-using GenericBackoffice.infrastructure;
-using GenericBackoffice.models;
 
 [assembly: OwinStartup(typeof(GenericBackoffice.Startup))]
 
@@ -17,6 +19,15 @@ namespace GenericBackoffice
     {
         public void Configuration(IAppBuilder app)
         {
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = "appAuth",
+                CookieHttpOnly = true,
+                ExpireTimeSpan = TimeSpan.FromDays(1),
+                SlidingExpiration = true
+            });
+
+
             var config = new HttpConfiguration();
             config.MessageHandlers.Add(new MethodOverrideHandler());
             config.Routes.MapHttpRoute("api", "api/{controller}/{action}");
