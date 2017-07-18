@@ -30,7 +30,6 @@ namespace GenericBackoffice.infrastructure
             return user?.roles?
                 .Select(r => Role.FromGenericItem(DataProvider.GetItem("admin", "roles", r)))
                 .SelectMany(r => r.permissions).ToArray();
-
         }
 
         private static string HashPassword(string password)

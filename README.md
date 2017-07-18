@@ -393,6 +393,9 @@ This is a *natural* consequence of the [Generic OData Web API Controller](https:
         - *User*s have *Role*s
         - *Role*s have *Read* and *Write* permissions per *database* or *collection*
         
+_____
+I've stopped writing this walkthrough for it's getting too big....I'll do if afterwards. The code is (almost) self-evident. Follow the commits...
+
 
 
             
