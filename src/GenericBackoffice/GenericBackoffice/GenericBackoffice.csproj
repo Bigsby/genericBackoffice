@@ -132,6 +132,7 @@
     <Content Include="App_Data\admin\roles\editor.json" />
     <Content Include="App_Data\admin\users\configurator.json" />
     <Content Include="App_Data\admin\users\editor.json" />
+    <Content Include="App_Data\admin\users\bigsby.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
