@@ -15,6 +15,8 @@ This is a *natural* consequence of the [Generic OData Web API Controller](https:
 
    For that, each type of data will be in its own folder, semantically, *database* like in [Azure Cosmos DB](https://docs.microsoft.com/en-us/azure/cosmos-db/documentdb-introduction).
 
+   > At this point (I had to), changed the project language version to **C# 7.0** and add *System.ValueTuple* NuGet package.
+
    1. Change **DynamicPathHandler** to accept an *extra* segment:
         ```csharp
         using System;
@@ -38,17 +40,17 @@ This is a *natural* consequence of the [Generic OData Web API Controller](https:
                     return base.ParseTemplate(odataPathTemplate, requestContainer);
                 }
 
-                internal static Tuple<string, string> GetCollection(string path)
+                internal static (string, string) GetDatabaseCollection(string path)
                 {
                     var match = _pathRegex.Match(path);
-                    var database = string.IsNullOrEmpty(match.Groups[1].Value) ? "data" : match.Groups[1].Value;
+                    var database = string.IsNullOrEmpty(match.Groups[1].Value) ? "public" : match.Groups[1].Value;
                     var collection = match.Groups[2].Value;
-                    return new Tuple<string, string>(database, collection);
+                    return (database, collection);
                 }
             }
         }
         ```
-        - *"data"* is the *default* database so it can be omitted.
+        - *"public"* is the *default* database so it can be omitted.
 
 
     2. Change **DataProvider** to accept a *database* (folder):
@@ -252,7 +254,6 @@ This is a *natural* consequence of the [Generic OData Web API Controller](https:
         ```csharp
         using GenericBackoffice.infrastructure;
         using GenericBackoffice.models;
-        using System;
         using System.Linq;
         using System.Web.Http;
         using System.Web.OData;
@@ -263,48 +264,49 @@ This is a *natural* consequence of the [Generic OData Web API Controller](https:
             {
                 public IQueryable<GenericItem> Get()
                 {
-                    var path = GetCollection();
-                    return DataProvider.GetItems(path.Item1, path.Item2).AsQueryable();
+                    var (database, collection) = GetDatabaseCollection();
+                    return DataProvider.GetItems(database, collection).AsQueryable();
                 }
 
                 public GenericItem Get([FromODataUri]string key)
                 {
-                    var path = GetCollection();
-                    return DataProvider.GetItem(path.Item1, path.Item2, key);
+                    var (database, collection) = GetDatabaseCollection();
+                    return DataProvider.GetItem(database, collection, key);
                 }
 
                 public IHttpActionResult Post(GenericItem item)
                 {
-                    var path = GetCollection();
+                    var (database, collection) = GetDatabaseCollection();
 
-                    var result = DataProvider.SaveItem(path.Item1, path.Item2, item);
+                    var result = DataProvider.SaveItem(database, collection, item);
                     if (result)
-                        return Created($"data/{path.Item1}/{path.Item2}('{item.id}')", item);
+                        return Created($"data/{database}/{collection}('{item.id}')", item);
                     return InternalServerError(result.Error);
                 }
 
                 public IHttpActionResult Delete([FromODataUri]string key)
                 {
-                    var path = GetCollection();
-                    var result = DataProvider.DeleteItem(path.Item1, path.Item2, key);
+                    var (database, collection) = GetDatabaseCollection();
+                    var result = DataProvider.DeleteItem(database, collection, key);
                     if (result)
                         return Ok();
                     return InternalServerError(result.Error);
                 }
 
-                private Tuple<string, string> GetCollection()
+                private (string, string) GetDatabaseCollection()
                 {
-                    return DynamicPathHandler.GetCollection((string)RequestContext.RouteData.Values["odataPath"]);
+                    return DynamicPathHandler.GetDatabaseCollection((string)RequestContext.RouteData.Values["odataPath"]);
                 }
             }
         }
         ```
+
     4. Add folder structure in *App_Data* folder, e.g:
         - *admin*
             - *users*
                 - *one.json*
                 - *two.json*
-        - *data*
+        - *public*
             - *collection*
                 - *one.json*
                 - *two.json*
@@ -384,4 +386,14 @@ This is a *natural* consequence of the [Generic OData Web API Controller](https:
         }
         ```
     
-    3. Add authentication provider:
+    3. Add authentication provider.
+
+        The authencation model chosen is a simple one where there are:
+        - *User*s
+        - *User*s have *Role*s
+        - *Role*s have *Read* and *Write* permissions per *database* or *collection*
+        
+
+
+            
+

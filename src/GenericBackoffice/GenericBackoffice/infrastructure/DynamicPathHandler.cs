@@ -19,12 +19,12 @@ namespace GenericBackoffice.infrastructure
             return base.ParseTemplate(odataPathTemplate, requestContainer);
         }
 
-        internal static Tuple<string, string> GetCollection(string path)
+        internal static (string, string) GetDatabaseCollection(string path)
         {
             var match = _pathRegex.Match(path);
-            var database = string.IsNullOrEmpty(match.Groups[1].Value) ? "data" : match.Groups[1].Value;
+            var database = string.IsNullOrEmpty(match.Groups[1].Value) ? "public" : match.Groups[1].Value;
             var collection = match.Groups[2].Value;
-            return new Tuple<string, string>(database, collection);
+            return (database, collection);
         }
     }
 }

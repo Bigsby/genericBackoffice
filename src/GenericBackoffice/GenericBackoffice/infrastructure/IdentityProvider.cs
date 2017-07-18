@@ -1,8 +1,9 @@
-﻿using GenericBackoffice.models;
-using GenericBackoffice.models.auth;
+﻿using GenericBackoffice.models.auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 
 namespace GenericBackoffice.infrastructure
@@ -20,20 +21,17 @@ namespace GenericBackoffice.infrastructure
                     item.DynamicProperties[nameof(User.username)] as string == username
                     &&
                     item.DynamicProperties["password"] as string == passwordHash);
-            return BuildUser(user);
+            return User.FromGenericItem(user);
         }
 
-        private static User BuildUser(GenericItem item)
+        public static IEnumerable<Permission> GetPermissions()
         {
-            if (item == null)
-                return null;
+            var user = User.FromIdentity(HttpContext.Current.GetOwinContext().Authentication.User.Identity);
 
-            return new User
-            {
-                username = item.DynamicProperties[nameof(User.username)] as string,
-                displayName = item.DynamicProperties[nameof(User.displayName)] as string,
-                roles = item.DynamicProperties[nameof(User.roles)] as string[]
-            };
+            return user?.roles?
+                .Select(r => Role.FromGenericItem(DataProvider.GetItem("admin", "roles", r)))
+                .SelectMany(r => r.permissions);
+            
         }
 
         private static string HashPassword(string password)
