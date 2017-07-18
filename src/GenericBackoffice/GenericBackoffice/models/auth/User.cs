@@ -54,45 +54,13 @@ namespace GenericBackoffice.models.auth
 
         private IEnumerable<Claim> GetClaims()
         {
-            yield return new Claim(ClaimTypes.Name, displayName);
             yield return new Claim(ClaimTypes.NameIdentifier, username);
+
+            if (!string.IsNullOrEmpty(displayName))
+                yield return new Claim(ClaimTypes.Name, displayName);
+
             foreach (var role in roles)
                 yield return new Claim(ClaimTypes.Role, role);
-        }
-    }
-
-    public class Role
-    {
-        public string id { get; set; }
-        public string displayName { get; set; }
-        public Permission[] permissions { get; set; }
-
-        public static Role FromGenericItem(GenericItem item)
-        {
-            return new Role
-            {
-                id = item.id,
-                displayName = item.GetPropertyValue<string>(nameof(displayName)),
-                permissions = item.GetPropertyValue<GenericItem[]>(nameof(permissions))?
-                    .Select(i => Permission.FromGenericItem(i)).ToArray()
-            };
-        }
-    }
-
-    public class Permission
-    {
-        public string database { get; set; }
-        public string collection { get; set; }
-        public bool write { get; set; }
-
-        public static Permission FromGenericItem(GenericItem item)
-        {
-            return new Permission
-            {
-                database = item.GetPropertyValue<string>(nameof(database)),
-                collection = item.GetPropertyValue<string>(nameof(collection)),
-                write = item.GetPropertyValue(nameof(write), false)
-            };
         }
     }
 }

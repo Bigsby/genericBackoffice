@@ -1,0 +1,13 @@
+﻿{
+  "displayName": "Administrator",
+  "description": "Configure users, roles and permissions",
+  "permissions": [
+    {
+      "database": "admin",
+      "write": true
+    },
+    {
+      "database": "bo"
+    }
+  ]
+}

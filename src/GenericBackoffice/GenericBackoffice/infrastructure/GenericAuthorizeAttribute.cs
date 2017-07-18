@@ -1,5 +1,4 @@
-﻿using GenericBackoffice.models.auth;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 
@@ -15,7 +14,7 @@ namespace GenericBackoffice.infrastructure
             if (database == "public" && !isWrite)
                 return true;
 
-            var permissions = IdentityProvider.GetPermissions() ?? new Permission[0];
+            var permissions = IdentityProvider.GetPermissions();
 
             var databasePermissions = permissions.Where(p => p.database == database && string.IsNullOrEmpty(p.collection));
             var collectionPersmissions = permissions.Where(p => p.database == database && p.collection == collection);

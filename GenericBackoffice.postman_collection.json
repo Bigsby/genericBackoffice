@@ -1,0 +1,48 @@
+{
+	"variables": [],
+	"info": {
+		"name": "GenericBackoffice",
+		"_postman_id": "0e304900-e0e0-725f-d243-7269f2060253",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List Users",
+			"request": {
+				"url": "http://localhost:60371/data/admin/users",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": ".AspNet.appAuth=_ozXiuL4uYdzk2lCvm3GMRk7_RBB4vEz4YJV8v0vGAgN7PnwpIbn1FBLtcDvCI3TKWqHowl7LTuU9vg0zGuRuhomtEn9_SXf-aJSEQgl9PzkmYRKQG_i9DFBNKdzFDiCBFfA_mmJUR7EM9nfbUuP5eCDc63EjcE6uD6O4n52iP8cjGv0AMyr5MIkOIjvBaOq9_HRki3CGUXpG35yvoK2khKssLYNh1cZRxOTJeoCdCrogRI0R3kHvLgxGc9OgtbD9ENYuB8m1Q3f5tu1AY3uWNDFVWZrR3O3CSqV1CV3BpLBQhiB97kke7gTgbPFaEc0odgtWtPsDjUNgUGzNqqP9uneg47ZrPFhx58bwLA25L0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "SignIn",
+			"request": {
+				"url": "http://localhost:60371/api/auth/signin",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"admin\",\"password\":\"admin\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

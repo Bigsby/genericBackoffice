@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web.Hosting;
 
 namespace GenericBackoffice.infrastructure
@@ -154,7 +155,7 @@ namespace GenericBackoffice.infrastructure
                 case JTokenType.TimeSpan:
                     return array.ToObject<TimeSpan[]>();
                 case JTokenType.Object:
-                    return ConvertObjectArray(parentId, array);
+                    return ConvertObjectArray(parentId, array).ToArray();
             }
         }
 

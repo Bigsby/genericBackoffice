@@ -1,0 +1,10 @@
+﻿{
+  "displayName": "Configurator",
+  "description": "Configure Backoffice metadata",
+  "permissions": [
+    {
+      "database": "bo",
+      "write": true
+    }
+  ]
+}

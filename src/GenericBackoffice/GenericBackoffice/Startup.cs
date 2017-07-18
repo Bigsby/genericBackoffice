@@ -30,6 +30,7 @@ namespace GenericBackoffice
 
             var config = new HttpConfiguration();
             config.MessageHandlers.Add(new MethodOverrideHandler());
+            config.MapHttpAttributeRoutes();
             config.Routes.MapHttpRoute("api", "api/{controller}/{action}");
             ConfigureOdata(config);
             app.UseWebApi(config);

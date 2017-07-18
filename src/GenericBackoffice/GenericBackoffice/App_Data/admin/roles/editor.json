@@ -1,0 +1,13 @@
+﻿{
+  "displayName": "Editor",
+  "description": "Edit Backoffice data",
+  "permissions": [
+    {
+      "database": "public",
+      "write": true
+    },
+    {
+      "database": "bo"
+    }
+  ]
+}
